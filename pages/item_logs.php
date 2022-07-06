@@ -100,7 +100,7 @@ include('../pages/queries/account.php');
                         <div class="field">
                             <label class="label">Amount</label>
                             <div class="control">
-                                <input class="input" name="amount" type="text" placeholder="Enter amount" required>
+                                <input class="input" name="amount" type="number" placeholder="Enter amount" required>
                             </div>
                         </div>
 
@@ -161,7 +161,7 @@ include('../pages/queries/account.php');
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-link">
             <thead>
                 <tr class="is-selected">
-                    <th>ID</th>
+                  
                     <th>Account</th>
                     <th><abbr title="dd/mm/yy">Date Added</abbr></th>
                     <th><abbr title="Amount">Amount</abbr></th>
@@ -171,7 +171,7 @@ include('../pages/queries/account.php');
             </thead>
             <tfoot>
                 <tr>
-                    <th>ID</th>
+                   
                     <th>Account</th>
                     <th><abbr title="dd/mm/yy">Date Added</abbr></th>
                     <th><abbr title="Amount">Amount</abbr></th>
@@ -190,12 +190,11 @@ include('../pages/queries/account.php');
                     foreach ($query as $fetch) {
                 ?>
                         <tr>
-                            <td><?php echo $fetch['itemlog_id'] ?></td>
                             <td><?php echo $fetch['account'] ?></td>
                             <td><?php echo date("F d, Y", strtotime($fetch['date_added'])) ?></td>
                             <td>₱ <?php echo $fetch['amount'] ?></td>
                             <td><?php echo mb_strimwidth($fetch['remarks'], 0, 20, "..."); ?></td>
-                            <td><a href="./edit_item_logs.php?id=<?php echo $fetch['itemlog_id'] ?>">View Details</a></td>
+                            <td><button class="button is-link is-light"  onclick="window.location.href = './edit_item_logs.php?ref_component_pfinance_header=<?php echo $fetch['itemlog_id'] ?>'">Edit Details</button></td>
                         </tr>
                     <?php }
                 } else { ?>

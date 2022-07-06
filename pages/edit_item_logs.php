@@ -1,6 +1,52 @@
 <?php
 require_once "../pages/queries/connection.php";
-include ('../pages/queries/account.php');
+include('../pages/queries/account.php');
+
+$log_mess = '';
+$error_mess = '';
+if (isset($_POST['updatelog'])) {
+
+    $id = $_GET['ref_component_pfinance_header'];
+
+    $account = $_POST['account'];
+    $amount = $_POST['amount'];
+    $remarks = $_POST['remarks'];
+
+    $stmt = $db->prepare("UPDATE item_logs SET account = '$account', amount = '$amount', remarks = '$remarks' WHERE itemlog_id = '$id'");
+
+    if ($stmt->execute()) {
+        $log_mess = "<script>
+                let timerInterval
+                Swal.fire({
+                    title: 'Saving! Please wait...',
+                    html: 'The window will close in <b></b> milliseconds.',
+                    text: 'To see change',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                        b.textContent = Swal.getTimerLeft()
+                    }, 100)
+                    },
+                    willClose: () => {
+                    clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('I was closed')
+                    }
+                })
+                header('Location: ../pages/items_logs.php')
+			 </script>";
+    } else {
+        $_SESSION['status'] = 'There is an Error: ';
+        $_SESSION['status_code'] = 'error';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -18,6 +64,12 @@ include ('../pages/queries/account.php');
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://kit.fontawesome.com/9ec85b07cd.js" crossorigin="anonymous"></script>
     <title>Edit Item</title>
+
+    <style>
+        .content-edit{
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,7 +89,7 @@ include ('../pages/queries/account.php');
             <li><a class="nav-link" href="#"><i class="fas fa-sign-out"></i>Logout</a></li>
         </ul>
     </nav>
-    
+
     <main class="table-content">
         <div class="top-navigation">
             <button class="button is-link is-light js-modal-trigger" data-target="need-help"><span><i class="fa fa-question-circle"></i> <?php echo 'Need help?' ?></span></button>
@@ -58,8 +110,8 @@ include ('../pages/queries/account.php');
                 </div>
             </div>
         </div>
-         <!-- Need help modal form -->
-         <div id="need-help" class="modal">
+        <!-- Need help modal form -->
+        <div id="need-help" class="modal">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <header class="modal-card-head">
@@ -111,55 +163,75 @@ include ('../pages/queries/account.php');
                         <span class="icon is-small">
                             <i class="fas fa-book" aria-hidden="true"></i>
                         </span>
-                        <span>View Details</span>
+                        <span>Edit Details</span>
                     </a>
                 </li>
             </ul>
         </nav>
-        <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="POST" action="">
             <?php
-            $id = $_GET['itemlog_id'];
+            $id = $_GET['ref_component_pfinance_header'];
 
-            $stmt = $db->prepare("SELECT * from item_logs WHERE itemlog_id = '$id'");
-            $stmt->execute();
-            $query = $stmt->fetchAll();
-            if (count($query) > 0) {
-                foreach ($query as $fetch) {
+            $stmt = $db->query("SELECT * FROM item_logs WHERE itemlog_id = '$id'");
+            $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+            while ($query = $stmt->fetch()) {
             ?>
-            <div class="field box field-info">
-                <label id="email" class="label">Legal Information</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" name="account" type="text" value="<?php echo $fetch['account'] ?>" placeholder="Account">
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-user-circle"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
-                    </span>
-                </div>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" name="amount" type="text" value="<?php echo $fetch['amount'] ?>" placeholder="Amount">
-                    <span class="icon is-small is-left">
-                        <i class="fa fa-money"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
-                    </span>
-                </div>
-                <div class="control has-icons-left has-icons-right">
-                    <textarea class="textarea" name="remarks" placeholder="Message..."><?php echo $fetch['remarks'] ?></textarea>
-                </div>
-            </div>
+                <div class="field box field-info">
+                    <label id="email" class="label">Legal Information</label>
+                    <div class="control has-icons-left has-icons-right">
+                        <input class="input" name="account" type="text" value="<?php echo $query['account'] ?>" placeholder="Account">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user-circle"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    </div>
+                    <div class="control has-icons-left has-icons-right">
+                        <input class="input" name="amount" type="text" value="<?php echo $query['amount'] ?>" placeholder="Amount">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-money"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    </div>
+                    <div class="control">
+                        <textarea class="textarea" name="remarks" placeholder="Message..."><?php echo $query['remarks'] ?></textarea>
+                    </div>
+                    <br>
+                    <!-- Need help modal form -->
+                    <div id="update" class="modal">
+                        <div class="modal-background"></div>
+                        <div class="modal-content">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title content-edit">Are you sure you want to change this?</p>
+                                <!-- <button class="delete" aria-label="close"></button> -->
+                            </header>
 
-            <div class="field is-grouped">
-                <div class="control">
-                    <button name="createbtn" class="button is-link">Update</button>
+                            <section class="modal-card-body">
+                                <!-- Content ... -->
+                                <div class="field content-edit">
+                                    <p>To save current changes, click <strong>'confirm'</strong> button.</p>
+                                </div>
+                            </section>
+                            <footer class="modal-card-foot">
+                                <button name="updatelog" class="button is-warning js-modal-trigger" data-target="update">Confirm</button>
+                                <!-- <button class="button">Cancel</button> -->
+                            </footer>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <?php }} ?>
+            <?php } ?>
         </form>
+        <div class="field is-grouped">
+            <div class="control is-right">
+                <button class="button is-warning js-modal-trigger" data-target="update">Update</button>
+                <button name="update" class="button is-danger">Delete</button>
+            </div>
+        </div>
     </main>
-    
+
     <script src="../javascript/main.js"></script>
 </body>
 

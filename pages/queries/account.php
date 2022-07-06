@@ -126,11 +126,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         if ($stmt->execute()) {
            $log_mess = "<script>
-                Swal.fire(
-                    'Added Successfully!',
-                    'You can close the window',
-                    'success'
-                )
+                let timerInterval
+                Swal.fire({
+                    title: 'Please wait...',
+                    html: 'The window will close in <b></b> milliseconds.',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                        b.textContent = Swal.getTimerLeft()
+                    }, 100)
+                    },
+                    willClose: () => {
+                    clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('I was closed')
+                    }
+                })
 			 </script>";
         } else {
             $_SESSION['status'] = 'There is an Error: ';

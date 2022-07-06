@@ -151,17 +151,18 @@ include "./pages/queries/login.php";
                 <button class="button is-link" name="logbtn">
                   <strong>Login</strong>
                 </button>
-                <br>
-                <br>
+
+                
               </div>
             </div>
           </form>
+          
       </div>
     </div>
 
     <button class="modal-close is-large" aria-label="close"></button>
   </div>
-  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d118671.44600427017!2d121.01948945992297!3d14.680109359289363!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0942ef7375%3A0x4a9a32d9fe083d40!2sQuezon%20City%2C%20Metro%20Manila!5e1!3m2!1sen!2sph!4v1656817561227!5m2!1sen!2sph" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d118671.44600427017!2d121.01948945992297!3d14.680109359289363!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0942ef7375%3A0x4a9a32d9fe083d40!2sQuezon%20City%2C%20Metro%20Manila!5e1!3m2!1sen!2sph!4v1656817561227!5m2!1sen!2sph" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> -->
   </section>
 
   <footer class="footer">

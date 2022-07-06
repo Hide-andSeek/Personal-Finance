@@ -6,6 +6,12 @@ html {
     text-align: center;
 }
 
+::-webkit-outer-spin-button,
+::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
 ::-webkit-scrollbar {
     width: 15px;
 }

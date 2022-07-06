@@ -1,3 +1,8 @@
+<?php
+require_once "../pages/queries/connection.php";
+include('../pages/queries/account.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -77,14 +82,14 @@
             <form method="POST" action="">
                 <div class="modal-content">
                     <header class="modal-card-head">
-                        <p class="modal-card-title">Add Item Logs</p>
+                        <p class="modal-card-title">Budget</p>
                         <button class="delete" aria-label="close"></button>
                     </header>
 
                     <section class="modal-card-body">
                         <!-- Content ... -->
                         <div class="field">
-                            <label class="label">Acount Name</label>
+                            <label class="label">Budget</label>
                             <div class="control">
                                 <input class="input" name="account" type="text" placeholder="Please specify account name" required>
                             </div>
@@ -115,99 +120,48 @@
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-link">
             <thead>
                 <tr class="is-selected">
-                    <th>Account</th>
-                    <th><abbr title="Date">Date</abbr></th>
-                    <th><abbr title="Time">Time</abbr></th>
-                    <th><abbr title="Beg">Amount</abbr></th>
-                    <th><abbr title="Drawn">Particulars</abbr></th>
+                    <th><abbr title="Date">Budget</abbr></th>
+                    <th><abbr title="Time">Amount</abbr></th>
+                    <th><abbr title="Beg">Date</abbr></th>
+                    <th><abbr title="Drawn">Time</abbr></th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Particulars</th>
-                    <th><abbr title="Date">Date</abbr></th>
-                    <th><abbr title="Time">Time</abbr></th>
-                    <th><abbr title="Beg">Amount</abbr></th>
-                    <th><abbr title="Drawn">Particulars</abbr></th>
+                    <th><abbr title="Date">Budget</abbr></th>
+                    <th><abbr title="Time">Amount</abbr></th>
+                    <th><abbr title="Beg">Date</abbr></th>
+                    <th><abbr title="Drawn">Time</abbr></th>
+                    <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                <tr>
-                    <td>Cash on Hand</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-BPI</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-MBT</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-ECebuana</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-UBP</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-GCash-Savings</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-GCash-Wallet</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-Paymaya</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>CIB-GrabPay</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>FS-Col Financial</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>Inventory</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
+            <?php
+                $search = $_GET['search'];
+
+                $stmt = $db->prepare("SELECT * from budget WHERE budget LIKE '%$search%' OR budget_id LIKE '%$search%'");
+                $stmt->execute();
+                $query = $stmt->fetchAll();
+                if (count($query) > 0) {
+                    foreach ($query as $fetch) {
+                ?>
+                        <tr>
+
+                            <td><?php echo $fetch['budget'] ?></td>
+                            <td>₱ <?php echo $fetch['amount'] ?></td>
+                            <td><?php echo $fetch['date'] ?></td>
+                            <td><?php echo $fetch['time'] ?></td>
+                            <td><button class="button is-link is-light"  onclick="window.location.href = './edit_item_logs.php?ref_component_pfinance_header=<?php echo $fetch['itemlog_id'] ?>'">Edit Details</button></td>
+                        </tr>
+                    <?php }
+                } else { ?>
+                    <tr>
+                        <td colspan="6">
+                            <p class="norecord"> No records to show</p>
+                        </td>
+                    </tr>
+            <?php } ?>
             </tbody>
         </table>
         <nav class="pagination" role="navigation" aria-label="pagination">
