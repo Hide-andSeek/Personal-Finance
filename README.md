@@ -1,4 +1,4 @@
-# Barangay Management System for Commonwealth
+# Personal Finance
 
 ![Design preview for the Landing Page](./images/Personal_Finance.png)
 
