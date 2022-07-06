@@ -1,0 +1,113 @@
+html {
+    background: #F0F2F5;
+}
+
+.text-center{
+    text-align: center;
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #2c43aa;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    opacity: 0.6;
+}
+
+img.iab-logo {
+    width: 100%;
+    height: auto;
+}
+
+#navbar {
+    position: fixed;
+    height: 100%;
+    width: 230px;
+    background-color: #95A0CE;
+    max-width: 250px;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+    overflow: auto;
+    padding: 20px;
+    font-size: 17px;
+}
+
+#navbar ul li {
+    padding: 10px;
+}
+
+.finance_logo {
+    width: 50px;
+}
+
+.underline {
+    padding-bottom: 50px;
+}
+
+.nav-link i {
+    padding-right: 10px;
+}
+
+.nav-li {
+    margin-bottom: 70px;
+}
+
+.navlink-active {
+    background-color: white;
+    border-radius: 20px;
+    opacity: 0.7;
+}
+
+.table-content,
+.main-content {
+    margin-left: 250px;
+    margin-right: 20px;
+    margin-bottom: 50px;
+}
+
+.top-navigation {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.field-info input {
+    margin-bottom: 10px;
+}
+
+.field-info input:first-letter {
+    text-transform: capitalize;
+}
+
+.message_error {
+    margin-top: -20px;
+    margin-bottom: 5px;
+}
+
+div.item-log {
+    display: flex;
+    padding: 0 0 20px 0;
+    justify-content: space-between;
+}
+
+.delete,
+.edit {
+    padding: 10px;
+}
+
+.norecord {
+    text-align: center;
+    padding: 10px;
+}
+

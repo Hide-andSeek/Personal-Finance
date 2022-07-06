@@ -1,18 +1,6 @@
 <?php
-include '../time_zone.php';
-require '../pages/queries/connection.php';
-
-function start_session()
-{
-    $_SESSION['email'] = '';
-    session_start();
-    if (empty($_SESSION['email'])) {
-        header("Location:index.php");
-        exit();
-    }
-}
-
-echo start_session();
+require_once "../pages/queries/connection.php";
+include ('../pages/queries/account.php');
 ?>
 
 <!DOCTYPE html>
@@ -29,29 +17,18 @@ echo start_session();
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://kit.fontawesome.com/9ec85b07cd.js" crossorigin="anonymous"></script>
-    <title>Dashboard</title>
+    <title>Edit Item</title>
 </head>
 
 <body>
-    <script>
-        Swal.fire({
-            title: 'Welcome to Personal Finance!',
-            // text: 'Enter a description right here',
-            imageUrl: '<?php echo "../images/Personal_Finance.svg" ?>',
-            imageWidth: 400,
-            imageHeight: 200,
-            imageAlt: 'Personal Finance Image',
-        })
-    </script>
-
+    <?php echo $log_mess; ?>
     <nav id="navbar">
         <div class="underline">
             <header> <img src="../images/Icon-1.svg" alt="" class="finance_logo"> Personal Finance</header>
         </div>
-
         <ul>
-            <li class="navlink-active"><a class="nav-link" href="../pages/dashboard.php"><i class="fa fa-th-large"></i> Dashboard</a></li>
-            <li><a class="nav-link" href="../pages/item_logs.php"><i class="fa fa-book"></i> Item Logs</a></li>
+            <li><a class="nav-link" href="../pages/dashboard.php"><i class="fa fa-book"></i> Dashboard</a></li>
+            <li class="navlink-active"><a class="nav-link" href="../pages/item_logs.php"><i class="fa fa-book"></i> Item Logs</a></li>
             <li><a class="nav-link" href="../pages/balance_sheet.php"><i class="fas fa-list-alt"></i> Balance Sheet</a></li>
             <li><a class="nav-link" href="../pages/income_statement.php"><i class="fas fa-file-text"></i> Income Statement</a></li>
             <li><a class="nav-link" href="../pages/credit_card.php"><i class="fas fa-credit-card"></i> Credit Cards</a></li>
@@ -60,12 +37,13 @@ echo start_session();
             <li><a class="nav-link" href="#"><i class="fas fa-sign-out"></i>Logout</a></li>
         </ul>
     </nav>
+    
     <main class="table-content">
         <div class="top-navigation">
-            <button class="button is-primary is-light js-modal-trigger" data-target="need-help"><span><i class="fa fa-question-circle"></i> <?php echo 'Need help?' ?></span></button>
+            <button class="button is-link is-light js-modal-trigger" data-target="need-help"><span><i class="fa fa-question-circle"></i> <?php echo 'Need help?' ?></span></button>
             <div class="dropdown is-right is-hoverable">
                 <div class="dropdown-trigger">
-                    <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <button class="button is-link is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
                         <span><i class="fa fa-user-circle"></i> <?php echo 'Israel Bañares' ?></span>
                     </button>
                 </div>
@@ -79,9 +57,9 @@ echo start_session();
                     </div>
                 </div>
             </div>
-        </div>           
-          <!-- Need help modal form -->
-          <div id="need-help" class="modal">
+        </div>
+         <!-- Need help modal form -->
+         <div id="need-help" class="modal">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <header class="modal-card-head">
@@ -117,74 +95,72 @@ echo start_session();
                 </footer>
             </div>
         </div>
-        <div class="hero-body tile">
-            <div class="tile is-parent">
-                <article class="tile is-child box">
-                    <a href="#" class="js-modal-trigger is-active" data-target="modal-js-example" id="">
-                        <p class="title is-5 has-text-centered"> Item Logs</p>
-                        <?php
-                        $equip_total_amount = '';
-
-                        $result = mysqli_query($connect, 'SELECT SUM(itemlogs_no) AS itemlogs_no FROM item_logs');
-                        ?>
-                        <?php
-                        while ($row = mysqli_fetch_array($result)) {
-                            $equip_total_amount = $row['itemlogs_no'];
-                        ?>
-                            <h3>₱ <?php echo $equip_total_amount; ?></h3>
-                        <?php
-                        }
-                        ?>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+                <li>
+                    <a href="../pages/item_logs.php">
+                        <span class="icon is-small">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                        </span>
+                        <span>Item Log</span>
                     </a>
-                </article>
-            </div>
-            <div class="tile is-parent">
-                <article class="tile is-child box">
-                    <a href="#" id="">
-                        <p class="title is-5 has-text-centered"> Balance Sheet</p>
-                        <img src="./images/Content-1.svg" alt="">
+                </li>
 
+                <li class="is-active">
+                    <a href="#">
+                        <span class="icon is-small">
+                            <i class="fas fa-book" aria-hidden="true"></i>
+                        </span>
+                        <span>View Details</span>
                     </a>
-                </article>
-            </div>
-            <div class="tile is-parent">
-                <article class="tile is-child box">
-                    <a href="#" id="">
-                        <p class="title is-5 has-text-centered"> Income Statement</p>
-                        <img src="./images/Content-2.svg" alt="">
-                    </a>
-                </article>
-            </div>
-        </div>
+                </li>
+            </ul>
+        </nav>
+        <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <?php
+            $id = $_GET['itemlog_id'];
 
-        <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+            $stmt = $db->prepare("SELECT * from item_logs WHERE itemlog_id = '$id'");
+            $stmt->execute();
+            $query = $stmt->fetchAll();
+            if (count($query) > 0) {
+                foreach ($query as $fetch) {
+            ?>
+            <div class="field box field-info">
+                <label id="email" class="label">Legal Information</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" name="account" type="text" value="<?php echo $fetch['account'] ?>" placeholder="Account">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </div>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" name="amount" type="text" value="<?php echo $fetch['amount'] ?>" placeholder="Amount">
+                    <span class="icon is-small is-left">
+                        <i class="fa fa-money"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </div>
+                <div class="control has-icons-left has-icons-right">
+                    <textarea class="textarea" name="remarks" placeholder="Message..."><?php echo $fetch['remarks'] ?></textarea>
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button name="createbtn" class="button is-link">Update</button>
+                </div>
+            </div>
+            <?php }} ?>
+        </form>
     </main>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load("current", {
-            packages: ["corechart"]
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Work', 11],
-                ['Eat', 2],
-                ['Commute', 2],
-                ['Watch TV', 2],
-                ['Sleep', 7]
-            ]);
-
-            var options = {
-                title: 'My Daily Activities',
-                is3D: true,
-            };
-
-            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-            chart.draw(data, options);
-        }
-    </script>
+    
+    <script src="../javascript/main.js"></script>
 </body>
 
 </html>
