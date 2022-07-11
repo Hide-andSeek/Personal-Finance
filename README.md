@@ -43,7 +43,7 @@ Should be able to:
 
 ### Continued development
 
-Working in progess. Trying to enhance UX/UI experience by simply customizing each design using Adobe Illustrator 
+Working in progess. Target objective is to enhance UX/UI experience by simply customizing each design using Adobe Illustrator. Furthermore, to add functionality of each modules.
 
 ### Useful resources
 
