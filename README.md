@@ -1,7 +1,7 @@
 # Personal Finance
 
 ![Design preview for the Landing Page](./images/Personal_Finance.png)
-
+![Design preview of Personal Finance: Features](./images/PF-Features.png)
 ## Table of contents
 
 - [Overview](#overview)
